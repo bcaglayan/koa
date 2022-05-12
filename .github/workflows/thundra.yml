@@ -1,0 +1,28 @@
+name: Thundra Foresight Koa Jest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  thundra_foresight:
+    runs-on: ubuntu-latest
+    env:
+      thundra_agent_debug_enable: true
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: koajs/koa
+      - name: Set up Node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - run: npm install
+      - name: Thundra Foresight JS Action
+        uses: thundra-io/thundra-foresight-js-action@v1
+        id: thundra-foresight-run
+        with:
+          apikey: ${{ secrets.THUNDRA_API_KEY }}
+          project_id: ${{ secrets.THUNDRA_KOA_JEST_PROJECTID }}
+
+      - name: Test Run
+        run: npm run test -- ${THUNDRA_JEST_ARGUMENTS}
